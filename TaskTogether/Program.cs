@@ -5,7 +5,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 
-using TaskTogether.Settings;
+using TaskTogether.API.Controllers;
+using TaskTogether.API.Settings;
+using TaskTogether.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +24,13 @@ builder.Services.AddSingleton<IMongoClient>(sp =>
 
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("Jwt"));
+
+// Register services from the API library so DI can resolve them.
+builder.Services.AddSingleton<UserService>();
+builder.Services.AddSingleton<JwtService>();
+
+builder.Services.AddSingleton<AuthController>();
+
 
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
@@ -52,9 +61,6 @@ builder.Services.AddCors(options =>
               .AllowAnyMethod());
 });
 
-
-
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>

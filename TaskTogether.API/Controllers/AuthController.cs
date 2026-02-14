@@ -1,9 +1,9 @@
-﻿namespace TaskTogether.Controllers
+namespace TaskTogether.API.Controllers
 {
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
-    using TaskTogether.Models;
-    using TaskTogether.Services;
+    using TaskTogether.API.Models;
+    using TaskTogether.API.Services;
 
     [ApiController]
     [Route("api/[controller]")]

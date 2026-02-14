@@ -1,13 +1,13 @@
-﻿using System.IdentityModel.Tokens.Jwt;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using TaskTogether.Models;
-using TaskTogether.Settings;
+using TaskTogether.API.Models;
+using TaskTogether.API.Settings;
 
-namespace TaskTogether.Services
+namespace TaskTogether.API.Services
 {
     public class JwtService
     {

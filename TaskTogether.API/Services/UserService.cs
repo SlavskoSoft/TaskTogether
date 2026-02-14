@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Options;
 using MongoDB.Driver;
-using TaskTogether.Models;
-using TaskTogether.Settings;
+using TaskTogether.API.Models;
+using TaskTogether.API.Settings;
 
-namespace TaskTogether.Services
+namespace TaskTogether.API.Services
 {
     public class UserService
     {

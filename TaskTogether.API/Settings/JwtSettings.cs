@@ -1,4 +1,4 @@
-﻿namespace TaskTogether.Settings
+namespace TaskTogether.API.Settings
 {
     public class JwtSettings
     {

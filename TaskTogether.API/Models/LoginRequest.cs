@@ -1,4 +1,4 @@
-﻿namespace TaskTogether.Models
+namespace TaskTogether.API.Models
 {
     public class LoginRequest
     {
