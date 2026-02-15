@@ -26,11 +26,9 @@ builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("Jwt"));
 
 // Register services from the API library so DI can resolve them.
-builder.Services.AddSingleton<UserService>();
-builder.Services.AddSingleton<JwtService>();
-
-builder.Services.AddSingleton<AuthController>();
-
+// Use scoped lifetime for services (recommended for services that use scoped dependencies like DB clients).
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<JwtService>();
 
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
@@ -60,6 +58,10 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
+
+// Configure MVC to discover controllers from the API class library assembly
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(AuthController).Assembly);
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

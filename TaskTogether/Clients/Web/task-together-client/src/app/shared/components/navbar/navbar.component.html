@@ -1,0 +1,26 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <div class="navbar-brand">
+      <a routerLink="/">TaskTogether</a>
+    </div>
+    <ul class="navbar-menu">
+      <li>
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          Home
+        </a>
+      </li>
+      <li *ngIf="!(isAuthenticated$ | async)">
+        <a routerLink="/auth/login" routerLinkActive="active">Login</a>
+      </li>
+      <li *ngIf="!(isAuthenticated$ | async)">
+        <a routerLink="/auth/register" routerLinkActive="active">Register</a>
+      </li>
+      <li *ngIf="isAuthenticated$ | async">
+        <span class="user-info">{{ (currentUser$ | async)?.userId }}</span>
+      </li>
+      <li *ngIf="isAuthenticated$ | async">
+        <button class="logout-btn" (click)="logout()">Logout</button>
+      </li>
+    </ul>
+  </div>
+</nav>
