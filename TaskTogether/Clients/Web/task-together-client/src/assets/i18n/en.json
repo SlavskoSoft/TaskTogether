@@ -1,0 +1,40 @@
+{
+    "navbar": {
+        "home": "Home",
+        "login": "Login",
+        "register": "Register",
+        "logout": "Logout",
+        "language": "Language"
+    },
+    "auth": {
+        "login": {
+            "title": "Login",
+            "email": "Email",
+            "password": "Password",
+            "submit": "Login",
+            "submitting": "Logging in...",
+            "error": "Login failed. Please try again.",
+            "registerLink": "Don't have an account? Register here"
+        },
+        "register": {
+            "title": "Register",
+            "email": "Email",
+            "password": "Password",
+            "role": "Role",
+            "submit": "Register",
+            "submitting": "Registering...",
+            "error": "Registration failed. Please try again.",
+            "loginLink": "Already have an account? Login here",
+            "roleParent": "Parent",
+            "roleChild": "Child"
+        }
+    },
+    "dashboard": {
+        "welcome": "Welcome to TaskTogether!",
+        "message": "This is your dashboard. More features coming soon."
+    },
+    "tasks": {
+        "title": "Tasks",
+        "coming": "Task list coming soon..."
+    }
+}

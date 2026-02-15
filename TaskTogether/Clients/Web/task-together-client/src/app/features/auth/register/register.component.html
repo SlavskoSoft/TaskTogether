@@ -1,9 +1,9 @@
 <div class="auth-container">
   <div class="auth-card">
-    <h2>Register</h2>
+    <h2>{{ title$ | async }}</h2>
     <form (ngSubmit)="onSubmit()">
       <div class="form-group">
-        <label for="email">Email</label>
+        <label for="email">{{ emailLabel$ | async }}</label>
         <input
           id="email"
           type="email"
@@ -15,7 +15,7 @@
       </div>
 
       <div class="form-group">
-        <label for="password">Password</label>
+        <label for="password">{{ passwordLabel$ | async }}</label>
         <input
           id="password"
           type="password"
@@ -27,22 +27,22 @@
       </div>
 
       <div class="form-group">
-        <label for="role">Role</label>
+        <label for="role">{{ roleLabel$ | async }}</label>
         <select [(ngModel)]="role" name="role" id="role">
-          <option value="Parent">Parent</option>
-          <option value="Child">Child</option>
+          <option value="Parent">{{ roleParent$ | async }}</option>
+          <option value="Child">{{ roleChild$ | async }}</option>
         </select>
       </div>
 
       <button type="submit" class="btn-primary" [disabled]="isLoading">
-        {{ isLoading ? 'Registering...' : 'Register' }}
+        {{ isLoading ? (submittingBtn$ | async) : (submitBtn$ | async) }}
       </button>
     </form>
 
     <p *ngIf="error" class="error">{{ error }}</p>
 
     <p class="auth-link">
-      Already have an account? <a routerLink="/auth/login">Login here</a>
+      {{ loginLink$ | async }} <a routerLink="/auth/login">{{ 'Login here' }}</a>
     </p>
   </div>
 </div>

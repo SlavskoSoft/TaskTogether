@@ -6,20 +6,23 @@
     <ul class="navbar-menu">
       <li>
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          Home
+          {{ home$ | async }}
         </a>
       </li>
       <li *ngIf="!(isAuthenticated$ | async)">
-        <a routerLink="/auth/login" routerLinkActive="active">Login</a>
+        <a routerLink="/auth/login" routerLinkActive="active">{{ login$ | async }}</a>
       </li>
       <li *ngIf="!(isAuthenticated$ | async)">
-        <a routerLink="/auth/register" routerLinkActive="active">Register</a>
+        <a routerLink="/auth/register" routerLinkActive="active">{{ register$ | async }}</a>
       </li>
       <li *ngIf="isAuthenticated$ | async">
         <span class="user-info">{{ (currentUser$ | async)?.userId }}</span>
       </li>
       <li *ngIf="isAuthenticated$ | async">
-        <button class="logout-btn" (click)="logout()">Logout</button>
+        <button class="logout-btn" (click)="logout()">{{ logout$ | async }}</button>
+      </li>
+      <li>
+        <app-language-selector></app-language-selector>
       </li>
     </ul>
   </div>

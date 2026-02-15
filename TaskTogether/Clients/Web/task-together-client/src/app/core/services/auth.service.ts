@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 export interface AuthResponse {
@@ -14,12 +15,16 @@ export interface CurrentUser {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private http = inject(HttpClient);
+  private platformId = inject(PLATFORM_ID);
+  private isBrowser = isPlatformBrowser(this.platformId);
+
   private currentUserSubject = new BehaviorSubject<CurrentUser | null>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
   private tokenKey = 'tt_token';
 
-  constructor(private http: HttpClient) {
+  constructor() {
     this.loadCurrentUser();
   }
 
@@ -35,7 +40,7 @@ export class AuthService {
     return this.http.post<AuthResponse>('/api/auth/login', { email, password }).pipe(
       tap((res) => {
         if (res?.token) {
-          localStorage.setItem(this.tokenKey, res.token);
+          this.setToken(res.token);
           this.loadCurrentUser();
         }
       })
@@ -43,12 +48,27 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem(this.tokenKey);
+    this.removeToken();
     this.currentUserSubject.next(null);
   }
 
   getToken(): string | null {
+    if (!this.isBrowser) {
+      return null;
+    }
     return localStorage.getItem(this.tokenKey);
+  }
+
+  private setToken(token: string): void {
+    if (this.isBrowser) {
+      localStorage.setItem(this.tokenKey, token);
+    }
+  }
+
+  private removeToken(): void {
+    if (this.isBrowser) {
+      localStorage.removeItem(this.tokenKey);
+    }
   }
 
   isAuthenticated(): boolean {
