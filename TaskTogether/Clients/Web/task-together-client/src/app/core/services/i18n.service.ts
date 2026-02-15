@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { LanguageService, Language } from './language.service';
-import { BehaviorSubject, Observable, map } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, map, startWith, distinctUntilChanged } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class I18nService {
@@ -14,7 +14,10 @@ export class I18nService {
   private translationsLoadedSubject = new BehaviorSubject<boolean>(false);
   public translationsLoaded$ = this.translationsLoadedSubject.asObservable();
 
-  private languageChangeSubject = new BehaviorSubject<number>(0);
+  // Use Subject instead of BehaviorSubject with counter
+  // This emits the actual language, making intent clearer
+  private languageChangeSubject = new Subject<Language>();
+  public languageChange$ = this.languageChangeSubject.asObservable();
 
   constructor() {
     this.initializeTranslations();
@@ -24,11 +27,12 @@ export class I18nService {
     const language = this.languageService.getCurrentLanguage();
     await this.loadTranslation(language);
 
-    // Watch for language changes
-    this.languageService.currentLanguage$.subscribe((lang) => {
+    // Watch for language changes and re-load translations
+    this.languageService.currentLanguage$.pipe(
+      distinctUntilChanged() // Only react to actual language changes
+    ).subscribe((lang) => {
       this.loadTranslation(lang);
-      // Emit a signal when language changes to trigger re-translation
-      this.languageChangeSubject.next(this.languageChangeSubject.value + 1);
+      this.languageChangeSubject.next(lang); // Emit the new language
     });
 
     this.translationsLoadedSubject.next(true);
@@ -57,13 +61,27 @@ export class I18nService {
     return typeof value === 'string' ? value : key;
   }
 
-  // Observable version that emits on language changes
+  /**
+   * Observable version that emits the translation immediately and whenever language changes.
+   * Re-emits whenever the language is changed via LanguageService.
+   * 
+   * @param key - The translation key (supports dot notation: 'auth.login.title')
+   * @returns Observable that emits the translated string
+   */
   translate$(key: string): Observable<string> {
-    return this.languageChangeSubject.pipe(
-      map(() => this.translate(key))
+    return this.languageChange$.pipe(
+      startWith(this.languageService.getCurrentLanguage()), // Emit current language on first subscription
+      map(() => this.translate(key)) // Translate with current language
     );
   }
 
+  /**
+   * One-time translation getter that returns an Observable.
+   * Useful for getting a single translation value and completing.
+   * 
+   * @param key - The translation key
+   * @returns Observable that emits once and completes
+   */
   getTranslation(key: string): Observable<string> {
     return new Observable((observer) => {
       if (this.translationsLoadedSubject.value) {

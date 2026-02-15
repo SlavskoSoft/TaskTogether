@@ -12,7 +12,8 @@ export class LanguageService {
   private storageKey = 'tt_language';
 
   private currentLanguageSubject = new BehaviorSubject<Language>(this.getInitialLanguage());
-  public currentLanguage$ = this.currentLanguageSubject.asObservable();
+  // Expose BehaviorSubject directly so new subscribers get the current value
+  public currentLanguage$ = this.currentLanguageSubject;
 
   private getInitialLanguage(): Language {
     if (!this.isBrowser) {
