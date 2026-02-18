@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 
 export interface AuthResponse {
@@ -38,7 +38,7 @@ export class AuthService {
 
   login(email: string, password: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>('/api/auth/login', { email, password }).pipe(
-      tap((res) => {
+      tap((res: any) => {
         if (res?.token) {
           this.setToken(res.token);
           this.loadCurrentUser();
@@ -82,7 +82,7 @@ export class AuthService {
   private loadCurrentUser(): void {
     if (this.isAuthenticated()) {
       this.http.get<CurrentUser>('/api/auth/current').subscribe({
-        next: (user) => this.currentUserSubject.next(user),
+        next: (user: CurrentUser | null) => this.currentUserSubject.next(user),
         error: () => {
           this.logout();
         },

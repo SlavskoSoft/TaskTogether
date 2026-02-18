@@ -37,6 +37,7 @@ namespace TaskTogether.API.Controllers
 
             var user = new User
             {
+                Id = Guid.NewGuid().ToString(),
                 Email = request.Email.ToLower(),
                 PasswordHash = passwordHash,
                 Role = request.Role,
